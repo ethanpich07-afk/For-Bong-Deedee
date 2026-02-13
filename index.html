@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Be My Valentine? 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Poppins", Arial, sans-serif;
+      background: #f7b2c4; /* soft pink, not too bright */
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      max-width: 400px;
+      width: 90%;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #c2185b; /* rose red */
+    }
+
+    .top-gif {
+      width: 200px;
+      margin-bottom: 15px;
+    }
+
+    .buttons {
+      margin-top: 30px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 28px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #yesBtn {
+      background: #4CAF50;
+      color: white;
+      font-size: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    #noBtn {
+      background: #ff4d6d;
+      color: white;
+      position: relative;
+      z-index: 3;
+    }
+
+    #result {
+      display: none;
+    }
+    .rose {
+  position: fixed;
+  top: -50px;
+  font-size: 24px;
+  pointer-events: none;
+  animation: fall linear forwards;
+  z-index: 1;
+}
+
+@keyframes fall {
+  from {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0.9;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <div class="card" id="mainCard">
+    <!-- GIF ABOVE THE QUESTION -->
+<img src="https://tenor.com/view/bunny-cute-silly-love-amor-gif-10513666739846720073.gif" class="top-gif" alt="Cute capybara gif">
+
+    <h1>Will you be my Valentine?</h1>
+
+    <div class="buttons">
+      <button id="yesBtn">Yes</button>
+      <button id="noBtn">No</button>
+    </div>
+  </div>
+
+<div class="card" id="result">
+  <h1>I knew You would say yes! :) </h1>
+
+  <!-- SUCCESS GIF -->
+  <img src="https://media.giphy.com/media/Y00mF6fy4LJdDFeN5M/giphy.gif" width="250" alt="Cute success gif">
+
+  <p style="margin-top: 20px; font-size: 18px;">Us LOL!☝️☝️</p>
+
+  <!-- GIFT BOX -->
+  <button id="giftBtn" style="
+    font-size: 50px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+  ">💌</button>
+
+  <!-- HIDDEN LETTER -->
+  <div id="giftContent" style="display:none; margin-top: 20px;">
+    <p style="font-size: 16px; color: #c2185b;">  
+      <em>
+        You are so special to me DeeDee!
+        I cherish every moment that we have together.
+        You are on my mind from the moment I wake up, until the moment my eyes close.
+        Oun jong bong to mean arom rik-reay, all the time, even while we are apart!
+        Even distance can't touch what I feel, becaause You are always right here with me.
+        Arkoun for making me smile, and being You!
+        I Love your laughter, your warmth, and how You make me feel cared for in the simple, beautiful way You do.
+        I don't take any of it for granted.
+        Oun srolanh bong! ❤️
+       </em>
+    </p>
+  </div>
+</div>
+
+
+<script>
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const mainCard = document.getElementById("mainCard");
+  const result = document.getElementById("result");
+
+  let noClickCount = 0;
+  let noScale = 1;
+  let noOffset = 0; // how far the NO button moves to the right
+
+  const noTexts = [
+    "Ohh please Bong...",
+    "Are You sure?",
+    "Reallyy suree?",
+    "Just think about it!",
+    "If you say no I'll be really sad"
+  ];
+
+  noBtn.addEventListener("click", () => {
+    noClickCount++;
+
+    // YES button grows fast
+    let yesScale;
+    switch (noClickCount) {
+      case 1: yesScale = 1.6; break;
+      case 2: yesScale = 2.5; break;
+      case 3: yesScale = 3.8; break;
+      case 4: yesScale = 5.5; break;
+      default: yesScale = 8; break; // huge = fills screen
+    }
+    yesBtn.style.transform = `scale(${yesScale})`;
+
+    // NO button shrinks
+    noScale -= 0.15;
+    if (noScale < 0.2) noScale = 0.2;
+
+    // Move NO button to the right each click
+    noOffset += 25; // pixels to move right each time
+
+    // Apply BOTH move and scale
+    noBtn.style.transform = `translateX(${noOffset}px) scale(${noScale})`;
+
+    // If YES is basically full screen, hide NO button
+    if (yesScale >= 8) {
+      noBtn.style.display = "none";
+    }
+
+    // Change No button text
+    if (noClickCount <= noTexts.length) {
+      noBtn.textContent = noTexts[noClickCount - 1];
+    } else {
+      noBtn.textContent = "Okay okay 😭";
+    }
+  });
+
+  yesBtn.addEventListener("click", () => {
+    mainCard.style.display = "none";
+    result.style.display = "block";
+
+    // Start roses falling
+    if (!roseInterval) {
+      roseInterval = setInterval(createRose, 400);
+    }
+  });
+
+  const giftBtn = document.getElementById("giftBtn");
+  const giftContent = document.getElementById("giftContent");
+
+  giftBtn.addEventListener("click", () => {
+    giftBtn.textContent = "🎉";
+    giftContent.style.display = "block";
+  });
+
+  let roseInterval = null;
+
+  function createRose() {
+    const rose = document.createElement("div");
+    rose.className = "rose";
+    rose.textContent = "🌹";
+
+    rose.style.left = Math.random() * 100 + "vw";
+    rose.style.fontSize = (20 + Math.random() * 20) + "px";
+
+    const duration = 4 + Math.random() * 3;
+    rose.style.animationDuration = duration + "s";
+
+    document.body.appendChild(rose);
+
+    setTimeout(() => {
+      rose.remove();
+    }, duration * 1000);
+  }
+</script>
+
+
+</body>
+</html>
